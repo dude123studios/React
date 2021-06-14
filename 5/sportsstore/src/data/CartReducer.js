@@ -19,6 +19,7 @@ export const CartReducer = (storeData, action) => {
 
             newStore.cartItems += q;
             newStore.cartPrice += p.price * q;
+            return newStore;
 
         case ActionTypes.CART_UPDATE:
             newStore.cart = newStore.cart.map((item) => {
