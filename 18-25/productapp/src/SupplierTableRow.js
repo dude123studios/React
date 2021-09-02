@@ -3,7 +3,7 @@ import React, { Component } from "react";
 export class SuplierTableRow extends Component {
     render() {
         let s = this.props.supplier;
-        console.log(s.id);
+
         return (
             <tr>
                 <td>{s.id}</td>

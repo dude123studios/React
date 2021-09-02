@@ -1,44 +1,56 @@
 import React, { Component } from "react";
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    Redirect,
+} from "react-router-dom";
+import { ToggleLink } from "./routing/ToggleLink";
+import { RoutedDisplay } from "./routing/RoutedDisplay";
+import { IsolatedTable } from "./IsolatedTable";
 
 export class Selector extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selection: React.Children.toArray(props.children)[0].props.name,
-        };
-    }
-
-    setSelection = (ev) => {
-        ev.persist();
-        this.setState({ selection: ev.target.name });
-    };
-
     render() {
+        const routes = React.Children.map(this.props.children, (child) => ({
+            component: child,
+            name: child.props.name,
+            url: `/${child.props.name.toLowerCase()}`,
+            dataType: child.props.dataType,
+        }));
+
         return (
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="col-2">
-                        {React.Children.map(this.props.children, (c) => (
-                            <button
-                                name={c.props.name}
-                                onClick={this.setSelection}
-                                className={`btn btn-block m-2 ${
-                                    this.state.selection === c.props.name
-                                        ? "btn-primary active"
-                                        : "btn-secondary"
-                                }`}
-                            >
-                                {c.props.name}
-                            </button>
-                        ))}
-                    </div>
-                    <div className="col">
-                        {React.Children.toArray(this.props.children).filter(
-                            (c) => c.props.name === this.state.selection
-                        )}
+            <Router getUserConfirmation={this.customGetUserConfirmation}>
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="col-2">
+                            <ToggleLink to="/isolated">
+                                Isolated Data
+                            </ToggleLink>
+                            {routes.map((r) => (
+                                <ToggleLink key={r.name} to={r.url}>
+                                    {r.name}
+                                </ToggleLink>
+                            ))}
+                        </div>
+                        <div className="col">
+                            <Switch>
+                                <Route
+                                    path="/isolated"
+                                    component={IsolatedTable}
+                                />
+                                {routes.map((r) => (
+                                    <Route
+                                        key={r.url}
+                                        path={`/:dataType(${r.dataType})/:mode?/:id?`}
+                                        component={RoutedDisplay(r.dataType)}
+                                    />
+                                ))}
+                                <Redirect to={routes[0].url} />
+                            </Switch>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </Router>
         );
     }
 }

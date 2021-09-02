@@ -11,7 +11,7 @@ export function customReducerEnhancer(originalReducer) {
 
     return (storeData, action) => {
         if (action.type === STORE_RESET && initialData != null) {
-            return initialState;
+            return initialData;
         } else {
             const result = originalReducer(storeData, action);
             if (initialState == null) {

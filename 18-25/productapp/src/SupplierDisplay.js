@@ -29,7 +29,7 @@ export const SupplierDisplay = connectFunction(
             } else {
                 return (
                     <div className="m-2">
-                        <ConnectedTable />
+                        <ConnectedTable needSuppliers={true} />
                         <div className="text-center">
                             <button
                                 className="btn btn-primary m-1"
