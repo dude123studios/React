@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import { RestDataSource } from "./webservice/RestDataSource";
+//import { RestDataSource } from "./webservice/RestDataSource";
+import { GraphQLDataSource } from "./graphql/GraphQLDataSource";
+import { PRODUCTS } from "./store/dataTypes";
 import { Link } from "react-router-dom";
 
 export class IsolatedTable extends Component {
@@ -8,9 +10,8 @@ export class IsolatedTable extends Component {
         this.state = {
             products: [],
         };
-        this.dataSource = new RestDataSource(
-            "http://localhost:3500/api/products",
-            (err) => this.props.history.push(`/error/${err}`)
+        this.dataSource = new GraphQLDataSource(PRODUCTS, (err) =>
+            this.props.history.push(`/error/${err}`)
         );
     }
 

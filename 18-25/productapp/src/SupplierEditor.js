@@ -8,7 +8,10 @@ export class SupplierEditor extends Component {
                 id: props.supplier.id || "",
                 name: props.supplier.name || "",
                 city: props.supplier.city || "",
-                products: props.supplier.products || [],
+                products:
+                    props.supplier.products != null
+                        ? props.supplier.products.map((p) => p.id)
+                        : [],
             },
         };
     }

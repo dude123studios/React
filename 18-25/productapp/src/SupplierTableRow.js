@@ -9,7 +9,11 @@ export class SuplierTableRow extends Component {
                 <td>{s.id}</td>
                 <td>{s.name}</td>
                 <td>{s.city}</td>
-                <td>{s.products.join(", ")}</td>
+                <td>
+                    {s.products != null
+                        ? s.products.map((p) => p.name).join(", ")
+                        : ""}
+                </td>
                 <td>
                     <button
                         className="btn btn-sm btn-warning m-1"

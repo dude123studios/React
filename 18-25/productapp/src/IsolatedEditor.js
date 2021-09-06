@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import { RestDataSource } from "./webservice/RestDataSource";
+//import { RestDataSource } from "./webservice/RestDataSource";
+import { GraphQLDataSource } from "./graphql/GraphQLDataSource";
 import { ProductEditor } from "./ProductEditor";
+import { PRODUCTS } from "./store/dataTypes";
 
 export class IsolatedEditor extends Component {
     constructor(props) {
@@ -10,10 +12,13 @@ export class IsolatedEditor extends Component {
         };
         this.dataSource =
             this.props.dataSource ||
-            new RestDataSource("http://localhost:3500/api/products");
+            new GraphQLDataSource(PRODUCTS, (err) =>
+                this.props.history.push(`/error/${err}`)
+            );
     }
 
     save = (data) => {
+        data = { ...data, price: Number(data.price) };
         const callback = () => this.props.history.push("/isolated");
         if (data.id === "") {
             this.dataSource.Store(data, callback);

@@ -4,27 +4,11 @@ import { PRODUCTS, SUPPLIERS } from "./dataTypes";
 import { deleteSupplier } from ".";
 import { withRouter } from "react-router-dom";
 import { DataGetter } from "../DataGetter";
-import { getData } from "../webservice/RestMiddleware";
+import { getData } from "../graphql/GraphQLMiddleware";
 
 export const TableConnector = (dataType, presentationComponent) => {
-    const mapStateToProps = (storeData, ownProps) => {
-        if (dataType === PRODUCTS) {
-            return { products: storeData.modelData[PRODUCTS] };
-        } else {
-            return {
-                suppliers: storeData.modelData[SUPPLIERS].map((supp) => ({
-                    ...supp,
-                    products: supp.products
-                        .map(
-                            (id) =>
-                                storeData.modelData[PRODUCTS].find(
-                                    (p) => p.id === Number(id)
-                                ) || id
-                        )
-                        .map((val) => val.name || val),
-                })),
-            };
-        }
+    const mapStateToProps = (storeData) => {
+        return { [dataType]: storeData.modelData[dataType] };
     };
 
     //Can only include dispatchable methods here

@@ -6,57 +6,41 @@ import {
     Redirect,
 } from "react-router-dom";
 import { ToggleLink } from "./routing/ToggleLink";
-import { RoutedDisplay } from "./routing/RoutedDisplay";
-import { IsolatedTable } from "./IsolatedTable";
-import { IsolatedEditor } from "./IsolatedEditor";
-import { RequestError } from "./webservice/RequestError";
+// import { RoutedDisplay } from "./routing/RoutedDisplay";
+// import { IsolatedTable } from "./IsolatedTable";
+// import { IsolatedEditor } from "./IsolatedEditor";
+// import { RequestError } from "./webservice/RequestError";
+import { GraphQLTable } from "./graphql/GraphQLTable";
+import { PRODUCTS, SUPPLIERS } from "./store/dataTypes";
+import { GraphQLEditor } from "./graphql/GraphQLEditor";
 
 export class Selector extends Component {
     render() {
-        const routes = React.Children.map(this.props.children, (child) => ({
-            component: child,
-            name: child.props.name,
-            url: `/${child.props.name.toLowerCase()}`,
-            dataType: child.props.dataType,
-        }));
-
         return (
             <Router getUserConfirmation={this.customGetUserConfirmation}>
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-2">
-                            <ToggleLink to="/isolated">
-                                Isolated Data
-                            </ToggleLink>
-                            {routes.map((r) => (
-                                <ToggleLink key={r.name} to={r.url}>
-                                    {r.name}
-                                </ToggleLink>
-                            ))}
+                            <ToggleLink to="/products">Products</ToggleLink>
+                            <ToggleLink to="/suppliers">Suppliers</ToggleLink>
                         </div>
                         <div className="col">
                             <Switch>
                                 <Route
-                                    path="/isolated"
-                                    component={IsolatedTable}
+                                    path="/products"
+                                    component={GraphQLTable(PRODUCTS)}
                                     exact={true}
                                 />
                                 <Route
-                                    path="/isolated/:mode/:id?"
-                                    component={IsolatedEditor}
+                                    path="/suppliers"
+                                    component={GraphQLTable(SUPPLIERS)}
+                                    exact={true}
                                 />
                                 <Route
-                                    path="/error/:message"
-                                    component={RequestError}
+                                    path="/:dataType/edit/:id?"
+                                    component={GraphQLEditor()}
                                 />
-                                {routes.map((r) => (
-                                    <Route
-                                        key={r.url}
-                                        path={`/:dataType(${r.dataType})/:mode?/:id?`}
-                                        component={RoutedDisplay(r.dataType)}
-                                    />
-                                ))}
-                                <Redirect to={routes[0].url} />
+                                <Redirect to="/products" />
                             </Switch>
                         </div>
                     </div>
